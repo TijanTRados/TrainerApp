@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 
-import { trainings, unavailableDates, measurementDates } from '@/lib/mockData';
+import { trainings, unavailableDates, measurementDates, currentPackage, today } from '@/lib/mockData';
 import Link from 'next/link';
 
 const dayNames = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
@@ -47,6 +47,10 @@ export default function Home() {
     .toLocaleDateString('en-GB', { month: 'long' })
     .toLocaleUpperCase('en-GB');
   const monthStr = String(month + 1).padStart(2, '0');
+  const trainingsDone = trainings.filter(
+    t => t.packageId === currentPackage.id && t.date <= today
+  ).length;
+  const packagePercent = Math.round((trainingsDone / currentPackage.size) * 100);
 
   // Styling for the navigation buttons
   const navButtonClass =
@@ -54,8 +58,24 @@ export default function Home() {
 
   return (
     <main className="p-4 max-w-md mx-auto spotlight-area" onMouseMove={handleSpotlight}>
+
+      {/* Package number and progress */}
+      <div className="flex items-center gap-2 mb-2">
+        <span className="text-xs text-muted tracking-wide whitespace-nowrap">
+          PACKAGE {currentPackage.id} · {trainingsDone} / {currentPackage.size}
+        </span>
+
+        <div className="flex-1 h-2 bg-raised border-2 border-outline">
+          <div
+            className="h-full bg-sakura"
+            style={{ width: `${packagePercent}%` }}
+          />
+        </div>
+      </div>
+
       {/* Header and navigation buttons */}
       <div className="flex items-center justify-between mb-4">
+
         <button
           type="button"
           onClick={() => shiftMonth(-1)}

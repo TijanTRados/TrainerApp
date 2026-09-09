@@ -18,3 +18,74 @@
   --color-ink: #F0E9E0;
   --color-muted: #8B8194;
 }
+
+:root {
+  --hover: 2px solid var(--color-ink);
+}
+
+.calendar-cell {
+  border: 2px solid var(--color-raised);
+  aspect-ratio: 1 / 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+}
+
+.calendar-cell:hover {
+  border: var(--hover);
+}
+
+.training-list {
+  border: 2px solid var(--color-raised);
+  padding: 0.5rem;
+  background: var(--color-surface);
+  margin: 0.5rem 0;
+  opacity: 0.8;
+  font-size: 0.875rem;
+  position: relative;
+}
+
+.training-list:hover {
+  opacity: 1;
+  border: var(--hover);
+}
+
+.training-list-date {
+  position: absolute;
+  top: 0.5rem;
+  color: var(--color-muted);
+  font-size: 0.625rem;
+}
+
+.training-list-number {
+  position: relative;
+  left: 1rem;
+  color: var(--color-sakura);
+  font-size: 2rem;
+}
+
+.training-list-content {
+  position: absolute;
+  left: 3rem;
+  margin-left: 3rem;
+  font-size: 1rem;
+}
+
+.spotlight::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1000ms ease;
+  background: radial-gradient(circle 5rem at var(--mx) var(--my),
+      color-mix(in srgb, var(--color-sakura) 20%, transparent),
+      transparent 100%);
+}
+
+/* lit while the pointer is anywhere in the grid, not just on one cell */
+.spotlight-area:hover .spotlight::after {
+  opacity: 0.7;
+}

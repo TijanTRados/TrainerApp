@@ -14,6 +14,15 @@ function trainingNumber(training) {
     .indexOf(training) + 1;
 }
 
+// Spotlight effect for the calendar cells
+function handleSpotlight(e) {
+  e.currentTarget.querySelectorAll('.spotlight').forEach((cell) => {
+    const r = cell.getBoundingClientRect();
+    cell.style.setProperty('--mx', `${e.clientX - r.left}px`);
+    cell.style.setProperty('--my', `${e.clientY - r.top}px`);
+  });
+}
+
 export default function Home() {
   // Stays null through the server render and the first client render, so both
   // produce identical HTML. The server can't know the visitor's local date.
@@ -44,7 +53,7 @@ export default function Home() {
     'w-8 h-8 border-2 border-raised bg-surface text-ink flex items-center justify-center text-lg leading-none';
 
   return (
-    <main className="p-4 max-w-md mx-auto">
+    <main className="p-4 max-w-md mx-auto spotlight-area" onMouseMove={handleSpotlight}>
       {/* Header and navigation buttons */}
       <div className="flex items-center justify-between mb-4">
         <button
@@ -86,11 +95,11 @@ export default function Home() {
 
           let cellStyle = 'text-ink border-raised';
           let marker = '';
-          if (training) { cellStyle = 'bg-sakura text-outline border-outline'; marker = trainingNumber(training); }
+          if (training) {
+            cellStyle = 'bg-sakura text-outline border-outline'; marker = trainingNumber(training);
+          }
           else if (isUnavailable) { cellStyle = 'bg-raised text-muted border-raised'; marker = 'x'; }
           else if (isMeasurement) { cellStyle = 'bg-yuzu text-outline border-outline font-bold'; marker = '!'; }
-
-          const cellClass = `relative aspect-square border-2 flex items-center justify-center text-sm ${cellStyle}`;
 
           const content = (
             <>
@@ -101,15 +110,37 @@ export default function Home() {
 
           if (training) {
             return (
-              <Link key={day} href={`/trainings/${training.id}`} className={cellClass}>
+              <Link key={day} href={`/trainings/${training.id}`} className={`calendar-cell ${cellStyle}`}>
                 {content}
               </Link>
             );
           }
 
-          return <div key={day} className={cellClass}>{content}</div>;
+          return <div key={day} className={`calendar-cell ${cellStyle} spotlight`}>
+            {content}
+          </div>;
         })}
       </div>
-    </main>
+
+      {/* List of trainings */}
+      <div className="mt-6">
+        <h2 className="text-lg font-bold mb-2">TRAINING LIST</h2>
+        <ul className="space-y-1">
+          {
+            trainings
+              .filter(t => t.date.startsWith(`${year}-${monthStr}`))
+              .sort((a, b) => a.date.localeCompare(b.date))
+              .map((training) => (
+                <li key={training.id} className="training-list spotlight">
+                  <Link href={`/trainings/${training.id}`} className="flex items-center gap-5 p-1">
+                    <div className="training-list-date">{training.date}</div>
+                    <div className="training-list-number">{trainingNumber(training)}</div>
+                    <div className="training-list-content">{training.type.toLocaleUpperCase()} at {training.time}</div>
+                  </Link>
+                </li>
+              ))}
+        </ul>
+      </div>
+    </main >
   );
 }

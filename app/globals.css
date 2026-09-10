@@ -136,7 +136,7 @@
   height: 1.25rem;
   background: var(--color-raised);
   border: 2px solid var(--color-outline);
-  transition: background 150ms;
+  transition: background 500ms;
 }
 
 .toggle-knob {

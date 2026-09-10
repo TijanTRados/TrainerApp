@@ -9,7 +9,7 @@ const dayNames = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
 // Returns the 1-based index of the training within its package, sorted by date
 function trainingNumber(training) {
   return trainings
-    .filter(t => t.packageId === training.packageId && t.status !== 'skipped')
+    .filter(t => t.packageId === training.packageId && t.status !== 'Skipped')
     .sort((a, b) => a.date.localeCompare(b.date))
     .indexOf(training) + 1;
 }
@@ -146,7 +146,7 @@ export default function Home() {
 
           if (training) {
             return (
-              <Link key={day} href={`/trainings/${training.id}`} className={`calendar-cell ${cellStyle}`}>
+              <Link key={day} href={`/trainings/${training.id}`} className={`spotlight calendar-cell ${cellStyle}`}>
                 {content}
               </Link>
             );
@@ -198,7 +198,7 @@ export default function Home() {
                       <div className="training-list-date">{training.date}</div>
                       <div className="training-list-number">{marker}</div>
                       <div className="training-list-content">{training.type.toLocaleUpperCase()} at {training.time}</div>
-                      <div className="training-list-status">{training.status === 'Done' ? 'Done' : training.status === 'Skipped' ? 'Skipped' : 'Upcoming'}</div>
+                      <div className="training-list-status">{training.status}</div>
                     </Link>
                   </li>
                 );

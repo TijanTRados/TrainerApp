@@ -26,7 +26,7 @@ function handleSpotlight(e) {
 export default function Home() {
   // Stays null through the server render and the first client render, so both
   // produce identical HTML. The server can't know the visitor's local date.
-  const [cursor, setCursor] = useState({ year: 2026, month: 6 });
+  const [cursor, setCursor] = useState({ year: 2026, month: 7 });
 
   // Shift the cursor by a number of months, positive or negative
   function shiftMonth(delta) {
@@ -59,7 +59,10 @@ export default function Home() {
   return (
     <main className="p-4 max-w-md mx-auto spotlight-area" onMouseMove={handleSpotlight}>
 
-      {/* Package number and progress */}
+      {/* ...........................................
+                Package number and progress 
+          ...........................................
+      */}
       <div className="flex items-center gap-2 mb-2">
         <span className="text-xs text-muted tracking-wide whitespace-nowrap">
           PACKAGE {currentPackage.id} · {trainingsDone} / {currentPackage.size}
@@ -97,30 +100,39 @@ export default function Home() {
         </button>
       </div>
 
-      {/* Calendar grid */}
+      {/* ...........................................
+                        Calendar grid 
+          ...........................................
+      */}
       <div className="grid grid-cols-7 gap-1 text-center">
         {dayNames.map((name, i) => (
           <div key={i} className="text-sm text-muted ">{name}</div>
         ))}
 
+        {/* Skip blank cells for the first week */}
         {blanks.map((_, i) => (
           <div key={i}></div>
         ))}
 
+        {/* Days iteration */}
         {days.map((day) => {
           const dateStr = `${year}-${monthStr}-${String(day).padStart(2, '0')}`;
           const training = trainings.find(t => t.date === dateStr);
           const isUnavailable = unavailableDates.some(d => d.date === dateStr);
           const isMeasurement = measurementDates.includes(dateStr);
 
+          {/* Depending on the date's status, we choose a cerain style */ }
           let cellStyle = 'text-ink border-raised';
           let marker = '';
+
           if (training) {
             cellStyle = 'bg-sakura text-outline border-outline'; marker = trainingNumber(training);
           }
           else if (isUnavailable) { cellStyle = 'bg-raised text-muted border-raised'; marker = 'x'; }
           else if (isMeasurement) { cellStyle = 'bg-yuzu text-outline border-outline font-bold'; marker = '!'; }
+          if (dateStr === today) { cellStyle += ' outline-2 outline-momiji'; }
 
+          {/* Cell content */ }
           const content = (
             <>
               <span className="absolute top-0.5 left-1 text-[10px] opacity-60">{day}</span>
@@ -142,7 +154,10 @@ export default function Home() {
         })}
       </div>
 
-      {/* List of trainings */}
+      {/* ...........................................
+                        Training list
+          ...........................................
+      */}
       <div className="mt-6">
         <h2 className="text-lg font-bold mb-2">TRAINING LIST</h2>
         <ul className="space-y-1">
@@ -151,7 +166,7 @@ export default function Home() {
               .filter(t => t.date.startsWith(`${year}-${monthStr}`))
               .sort((a, b) => a.date.localeCompare(b.date))
               .map((training) => (
-                <li key={training.id} className="training-list spotlight">
+                <li key={training.id} className={`training-list spotlight ${training.date === today ? 'outline-2 outline-momiji' : ''}`}>
                   <Link href={`/trainings/${training.id}`} className="flex items-center gap-5 p-1">
                     <div className="training-list-date">{training.date}</div>
                     <div className="training-list-number">{trainingNumber(training)}</div>

@@ -40,7 +40,7 @@ export default function Home() {
     .toLocaleUpperCase('en-GB');
   const monthStr = String(month + 1).padStart(2, '0');
   const trainingsDone = trainings.filter(
-    t => t.packageId === currentPackage.id && t.status === 'Done'
+    t => t.packageId === currentPackage.id && t.status === 1
   ).length;
   const packagePercent = Math.round((trainingsDone / currentPackage.size) * 100);
   const [showPast, setShowPast] = useState(false);

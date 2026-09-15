@@ -1,4 +1,4 @@
-import { trainings, unavailableDates, measurementDates, today } from '@/lib/mockData';
+import { trainings, trainingStatuses, unavailableDates, measurementDates, today } from '@/lib/mockData';
 import { trainingNumber } from '@/lib/training';
 import Link from 'next/link';
 
@@ -14,9 +14,9 @@ export default function CalendarCell({ day, dateStr }) {
     let marker = '';
 
     if (training) {
-        if (training.status === 'Done') { cellStyle = 'bg-sakura text-outline border-outline'; marker = trainingNumber(training); }
-        else if (training.status === 'Skipped') { cellStyle = 'skipped-cell bg-sakura text-outline border-outline'; marker = ""; }
-        else if (training.status === 'Upcoming') { cellStyle = 'bg-sakura text-outline border-outline'; marker = trainingNumber(training); }
+        if (training.status === 1) { cellStyle = 'bg-sakura text-outline border-outline'; marker = trainingNumber(training); }
+        else if (training.status === 2) { cellStyle = 'skipped-cell bg-sakura text-outline border-outline'; marker = ""; }
+        else if (training.status === 0) { cellStyle = 'bg-sakura text-outline border-outline'; marker = trainingNumber(training); }
     }
     else if (isUnavailable) { cellStyle = 'bg-raised text-muted border-raised'; marker = 'x'; }
     else if (isMeasurement) { cellStyle = 'bg-yuzu text-outline border-outline font-bold'; marker = '!'; }
@@ -33,13 +33,13 @@ export default function CalendarCell({ day, dateStr }) {
 
     if (training) {
         return (
-            <Link key={day} href={`/trainings/${training.id}`} className={`spotlight calendar-cell ${cellStyle}`}>
+            <Link key={day} href={`/trainings/${training.id}`} className={`spotlight calendar-cell ${cellStyle}`} title={`${trainingStatuses[training.status]} ${training.type.toLocaleUpperCase()} at ${training.time} on ${training.date}`}>
                 {content}
             </Link>
         );
     }
 
-    return <div key={day} className={`calendar-cell ${cellStyle} spotlight`}>
+    return <div key={day} className={`calendar-cell ${cellStyle} spotlight`} >
         {content}
     </div>;
 }

@@ -1,5 +1,3 @@
-'use client';
-import { useState } from 'react';
 import { trainings, trainingStatuses, currentPackage, today } from '@/lib/mockData';
 import { trainingNumber } from '@/lib/training';
 

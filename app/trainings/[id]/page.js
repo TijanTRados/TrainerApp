@@ -10,7 +10,7 @@ export default async function TrainingPage({ params }) {
     const number = trainingNumber(training);
     const { packageId, date, time, type, status } = training;
     return (
-        <main className="p-5 max-w-md mx-auto">
+        <main className="p-4 max-w-md mx-auto">
             <h1 className="text-3xl font-bold text-sakura">{type.toUpperCase()} BODY: {number}</h1>
             <p className="text-lg">Date: {date}</p>
             <p className="text-lg">Time: {time}</p>
